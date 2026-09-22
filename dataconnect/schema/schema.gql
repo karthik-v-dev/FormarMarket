@@ -1,0 +1,68 @@
+# Firebase SQL Connect Schema for Vegetable Delivery (FormerMarket)
+
+type User @table {
+  email: String! @unique
+  name: String!
+  phone: String
+  role: String! @default(value: "CUSTOMER")
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type Address @table {
+  user: User!
+  line1: String!
+  line2: String
+  city: String!
+  state: String!
+  pincode: String!
+  isDefault: Boolean! @default(value: false)
+}
+
+type Category @table {
+  name: String!
+  description: String
+}
+
+type Product @table {
+  name: String!
+  description: String
+  price: Float!
+  imageUrl: String
+  unit: String! @default(value: "1 kg")
+  category: Category
+  isActive: Boolean! @default(value: true)
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type Inventory @table(key: ["product"]) {
+  product: Product!
+  quantity: Float! @default(value: 0.0)
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type DeliverySlot @table {
+  name: String!
+  startTime: String!
+  endTime: String!
+  capacity: Int! @default(value: 50)
+  active: Boolean! @default(value: true)
+}
+
+type Order @table {
+  user: User!
+  address: Address
+  deliverySlot: DeliverySlot
+  totalAmount: Float!
+  deliveryDate: Date! @default(expr: "request.time")
+  status: String! @default(value: "CONFIRMED")
+  paymentMethod: String! @default(value: "COD")
+  placedAt: Timestamp! @default(expr: "request.time")
+}
+
+type OrderItem @table {
+  order: Order!
+  product: Product!
+  quantity: Float!
+  priceAtTimeOfPurchase: Float!
+  unitPrice: Float
+}

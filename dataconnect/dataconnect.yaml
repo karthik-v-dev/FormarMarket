@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "formersmarket-d864c-service"
+location: "us-east4"
+schemaValidation: "COMPATIBLE"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "formersmarket-d864c-instance"
+connectorDirs: ["./connector"]

@@ -1,0 +1,104 @@
+# Queries for Vegetable Delivery (FormerMarket)
+
+# 1. List all active products with inventory
+query ListProducts @auth(level: PUBLIC) {
+  products(where: { isActive: { eq: true } }, orderBy: [{ name: ASC }]) {
+    id
+    name
+    description
+    price
+    imageUrl
+    unit
+    inventory_on_product {
+      quantity
+    }
+  }
+}
+
+# 2. Get a specific product by ID
+query GetProduct($id: UUID!) @auth(level: PUBLIC) {
+  product(id: $id) {
+    id
+    name
+    description
+    price
+    imageUrl
+    unit
+    inventory_on_product {
+      quantity
+    }
+  }
+}
+
+# 3. List active delivery slots
+query ListDeliverySlots @auth(level: PUBLIC) {
+  deliverySlots(where: { active: { eq: true } }, orderBy: [{ name: ASC }]) {
+    id
+    name
+    startTime
+    endTime
+    capacity
+  }
+}
+
+# 4. List orders for a specific user
+query ListOrders($userId: UUID!) @auth(level: PUBLIC) {
+  orders(where: { userId: { eq: $userId } }, orderBy: [{ placedAt: DESC }]) {
+    id
+    status
+    totalAmount
+    paymentMethod
+    placedAt
+    deliveryDate
+    deliverySlot {
+      id
+      name
+      startTime
+      endTime
+    }
+    orderItems_on_order {
+      id
+      quantity
+      unitPrice
+      product {
+        id
+        name
+        unit
+      }
+    }
+  }
+}
+
+# 5. Get order by ID
+query GetOrder($id: UUID!) @auth(level: PUBLIC) {
+  order(id: $id) {
+    id
+    status
+    totalAmount
+    paymentMethod
+    placedAt
+    deliveryDate
+    address {
+      line1
+      line2
+      city
+      state
+      pincode
+    }
+    deliverySlot {
+      name
+      startTime
+      endTime
+    }
+    orderItems_on_order {
+      id
+      quantity
+      unitPrice
+      product {
+        id
+        name
+        unit
+      }
+    }
+  }
+}

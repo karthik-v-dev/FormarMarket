@@ -1,0 +1,92 @@
+# Mutations for Vegetable Delivery (FormerMarket)
+
+# 1. Create User
+mutation CreateUser($name: String!, $email: String!, $phone: String) @auth(level: PUBLIC) {
+  user_insert(data: {
+    name: $name,
+    email: $email,
+    phone: $phone,
+    role: "CUSTOMER"
+  })
+}
+
+# 2. Create Product
+mutation CreateProduct(
+  $name: String!,
+  $description: String,
+  $price: Float!,
+  $imageUrl: String,
+  $unit: String!
+) @auth(level: PUBLIC) {
+  product_insert(data: {
+    name: $name,
+    description: $description,
+    price: $price,
+    imageUrl: $imageUrl,
+    unit: $unit,
+    isActive: true
+  })
+}
+
+# 3. Update Inventory Stock
+mutation UpdateInventoryStock($productId: UUID!, $quantity: Float!) @auth(level: PUBLIC) {
+  inventory_upsert(data: {
+    productId: $productId,
+    quantity: $quantity
+  })
+}
+
+# 4. Create Address
+mutation CreateAddress(
+  $userId: UUID!,
+  $line1: String!,
+  $line2: String,
+  $city: String!,
+  $state: String!,
+  $pincode: String!
+) @auth(level: PUBLIC) {
+  address_insert(data: {
+    userId: $userId,
+    line1: $line1,
+    line2: $line2,
+    city: $city,
+    state: $state,
+    pincode: $pincode
+  })
+}
+
+# 5. Create Order
+mutation CreateOrder(
+  $userId: UUID!,
+  $addressId: UUID,
+  $deliverySlotId: UUID!,
+  $totalAmount: Float!,
+  $paymentMethod: String!,
+  $deliveryDate: Date!
+) @auth(level: PUBLIC) {
+  order_insert(data: {
+    userId: $userId,
+    addressId: $addressId,
+    deliverySlotId: $deliverySlotId,
+    totalAmount: $totalAmount,
+    paymentMethod: $paymentMethod,
+    deliveryDate: $deliveryDate,
+    status: "CONFIRMED"
+  })
+}
+
+# 6. Add Item to Order
+mutation AddOrderItem(
+  $orderId: UUID!,
+  $productId: UUID!,
+  $quantity: Float!,
+  $unitPrice: Float!
+) @auth(level: PUBLIC) {
+  orderItem_insert(data: {
+    orderId: $orderId,
+    productId: $productId,
+    quantity: $quantity,
+    priceAtTimeOfPurchase: $unitPrice,
+    unitPrice: $unitPrice
+  })
+}
