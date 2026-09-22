@@ -13,6 +13,12 @@
     },
     "ios": {
       "bundleIdentifier": "com.vegetabledelivery.app"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c19d8ba5-54ad-4477-8d5d-710c75fd9811"
+      }
+    },
+    "owner": "karthikvoorugondas-team"
   }
 }
