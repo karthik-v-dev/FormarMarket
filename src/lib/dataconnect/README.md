@@ -20,6 +20,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*CreateAddress*](#createaddress)
   - [*CreateOrder*](#createorder)
   - [*AddOrderItem*](#addorderitem)
+  - [*CreateDeliverySlot*](#createdeliveryslot)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `default`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -1379,6 +1380,124 @@ console.log(data.orderItem_insert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.orderItem_insert);
+});
+```
+
+## CreateDeliverySlot
+You can execute the `CreateDeliverySlot` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect/index.d.ts](./index.d.ts):
+```typescript
+createDeliverySlot(vars: CreateDeliverySlotVariables): MutationPromise<CreateDeliverySlotData, CreateDeliverySlotVariables>;
+
+interface CreateDeliverySlotRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateDeliverySlotVariables): MutationRef<CreateDeliverySlotData, CreateDeliverySlotVariables>;
+}
+export const createDeliverySlotRef: CreateDeliverySlotRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createDeliverySlot(dc: DataConnect, vars: CreateDeliverySlotVariables): MutationPromise<CreateDeliverySlotData, CreateDeliverySlotVariables>;
+
+interface CreateDeliverySlotRef {
+  ...
+  (dc: DataConnect, vars: CreateDeliverySlotVariables): MutationRef<CreateDeliverySlotData, CreateDeliverySlotVariables>;
+}
+export const createDeliverySlotRef: CreateDeliverySlotRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createDeliverySlotRef:
+```typescript
+const name = createDeliverySlotRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateDeliverySlot` mutation requires an argument of type `CreateDeliverySlotVariables`, which is defined in [dataconnect/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateDeliverySlotVariables {
+  name: string;
+  startTime: string;
+  endTime: string;
+  capacity?: number | null;
+}
+```
+### Return Type
+Recall that executing the `CreateDeliverySlot` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateDeliverySlotData`, which is defined in [dataconnect/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateDeliverySlotData {
+  deliverySlot_insert: DeliverySlot_Key;
+}
+```
+### Using `CreateDeliverySlot`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createDeliverySlot, CreateDeliverySlotVariables } from '@formersmarket/dataconnect';
+
+// The `CreateDeliverySlot` mutation requires an argument of type `CreateDeliverySlotVariables`:
+const createDeliverySlotVars: CreateDeliverySlotVariables = {
+  name: ..., 
+  startTime: ..., 
+  endTime: ..., 
+  capacity: ..., // optional
+};
+
+// Call the `createDeliverySlot()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createDeliverySlot(createDeliverySlotVars);
+// Variables can be defined inline as well.
+const { data } = await createDeliverySlot({ name: ..., startTime: ..., endTime: ..., capacity: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createDeliverySlot(dataConnect, createDeliverySlotVars);
+
+console.log(data.deliverySlot_insert);
+
+// Or, you can use the `Promise` API.
+createDeliverySlot(createDeliverySlotVars).then((response) => {
+  const data = response.data;
+  console.log(data.deliverySlot_insert);
+});
+```
+
+### Using `CreateDeliverySlot`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createDeliverySlotRef, CreateDeliverySlotVariables } from '@formersmarket/dataconnect';
+
+// The `CreateDeliverySlot` mutation requires an argument of type `CreateDeliverySlotVariables`:
+const createDeliverySlotVars: CreateDeliverySlotVariables = {
+  name: ..., 
+  startTime: ..., 
+  endTime: ..., 
+  capacity: ..., // optional
+};
+
+// Call the `createDeliverySlotRef()` function to get a reference to the mutation.
+const ref = createDeliverySlotRef(createDeliverySlotVars);
+// Variables can be defined inline as well.
+const ref = createDeliverySlotRef({ name: ..., startTime: ..., endTime: ..., capacity: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createDeliverySlotRef(dataConnect, createDeliverySlotVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.deliverySlot_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.deliverySlot_insert);
 });
 ```
 

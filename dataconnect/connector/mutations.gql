@@ -90,3 +90,20 @@ mutation AddOrderItem(
     unitPrice: $unitPrice
   })
 }
+
+# 7. Create Delivery Slot
+mutation CreateDeliverySlot(
+  $name: String!,
+  $startTime: String!,
+  $endTime: String!,
+  $capacity: Int = 50
+) @auth(level: PUBLIC) {
+  deliverySlot_insert(data: {
+    name: $name,
+    startTime: $startTime,
+    endTime: $endTime,
+    capacity: $capacity,
+    active: true
+  })
+}
+

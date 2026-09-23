@@ -77,6 +77,18 @@ export function addOrderItem(dcOrVars, vars) {
   return executeMutation(addOrderItemRef(dcInstance, inputVars));
 }
 
+export const createDeliverySlotRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateDeliverySlot', inputVars);
+}
+createDeliverySlotRef.operationName = 'CreateDeliverySlot';
+
+export function createDeliverySlot(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(createDeliverySlotRef(dcInstance, inputVars));
+}
+
 export const listProductsRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();

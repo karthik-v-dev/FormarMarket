@@ -44,6 +44,17 @@ export interface CreateAddressVariables {
   pincode: string;
 }
 
+export interface CreateDeliverySlotData {
+  deliverySlot_insert: DeliverySlot_Key;
+}
+
+export interface CreateDeliverySlotVariables {
+  name: string;
+  startTime: string;
+  endTime: string;
+  capacity?: number | null;
+}
+
 export interface CreateOrderData {
   order_insert: Order_Key;
 }
@@ -299,6 +310,18 @@ export const addOrderItemRef: AddOrderItemRef;
 
 export function addOrderItem(vars: AddOrderItemVariables): MutationPromise<AddOrderItemData, AddOrderItemVariables>;
 export function addOrderItem(dc: DataConnect, vars: AddOrderItemVariables): MutationPromise<AddOrderItemData, AddOrderItemVariables>;
+
+interface CreateDeliverySlotRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateDeliverySlotVariables): MutationRef<CreateDeliverySlotData, CreateDeliverySlotVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateDeliverySlotVariables): MutationRef<CreateDeliverySlotData, CreateDeliverySlotVariables>;
+  operationName: string;
+}
+export const createDeliverySlotRef: CreateDeliverySlotRef;
+
+export function createDeliverySlot(vars: CreateDeliverySlotVariables): MutationPromise<CreateDeliverySlotData, CreateDeliverySlotVariables>;
+export function createDeliverySlot(dc: DataConnect, vars: CreateDeliverySlotVariables): MutationPromise<CreateDeliverySlotData, CreateDeliverySlotVariables>;
 
 interface ListProductsRef {
   /* Allow users to create refs without passing in DataConnect */
