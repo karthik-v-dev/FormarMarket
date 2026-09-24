@@ -5,6 +5,7 @@ import productRoutes from "./modules/products/routes";
 import inventoryRoutes from "./modules/inventory/routes";
 import orderRoutes from "./modules/orders/routes";
 import deliveryRoutes from "./modules/delivery/routes";
+import cronRoutes from "./modules/cron/tierUpdateCron";
 
 export const app = express();
 app.use(cors({ origin: process.env.CORS_ORIGIN?.split(",") ?? "*" }));
@@ -17,3 +18,4 @@ app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/delivery", deliveryRoutes);
 app.use("/api/v1/delivery-slots", deliveryRoutes);
+app.use("/api/v1/cron", cronRoutes);

@@ -1,4 +1,5 @@
-﻿import { initializeApp, getApps, getApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getDatabase, Database } from "firebase/database";
 import { getDataConnect } from "firebase/data-connect";
 import {
   connectorConfig,
@@ -25,6 +26,7 @@ export const firebaseConfig = {
 };
 
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+export const rtdb: Database = getDatabase(app);
 export const dc = getDataConnect(app, connectorConfig);
 
 export {
