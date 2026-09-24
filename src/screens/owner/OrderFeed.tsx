@@ -7,9 +7,9 @@ import {
   Pressable,
   Image,
   Alert,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Order, OrderStatus } from '../../types';
 import { subscribeToOrders, updateOrderStatus } from '../../services/firebaseRtdb';
 import { getTierInfo } from '../../utils/tierCalculator';
@@ -17,9 +17,13 @@ import { getProductImageUrl } from '../../utils/unsplashImages';
 
 interface OrderFeedProps {
   onBackToCustomerView: () => void;
+  onLogout?: () => void;
 }
 
-export const OrderFeed: React.FC<OrderFeedProps> = ({ onBackToCustomerView }) => {
+export const OrderFeed: React.FC<OrderFeedProps> = ({
+  onBackToCustomerView,
+  onLogout,
+}) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilter, setSelectedFilter] = useState<'all' | OrderStatus>('all');
@@ -44,17 +48,29 @@ export const OrderFeed: React.FC<OrderFeedProps> = ({ onBackToCustomerView }) =>
     o => selectedFilter === 'all' || o.status === selectedFilter
   );
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       {/* Top Header */}
-      <View style={styles.header}>
-        <View>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 6 }]}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>⚡ Live COD Order Feed</Text>
           <Text style={styles.headerSub}>Morning Farm Dispatch Desk</Text>
         </View>
-        <Pressable style={styles.previewBtn} onPress={onBackToCustomerView}>
-          <Text style={styles.previewBtnText}>🛒 Customer View</Text>
-        </Pressable>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pressable style={styles.previewBtn} onPress={onBackToCustomerView}>
+            <Text style={styles.previewBtnText}>Shop View</Text>
+          </Pressable>
+          {onLogout && (
+            <Pressable
+              style={[styles.previewBtn, { backgroundColor: '#FEE2E2', borderColor: '#FCA5A5', marginLeft: 6 }]}
+              onPress={onLogout}
+            >
+              <Text style={[styles.previewBtnText, { color: '#B91C1C' }]}>Logout</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
 
       {/* Filter Tabs */}
@@ -95,7 +111,10 @@ export const OrderFeed: React.FC<OrderFeedProps> = ({ onBackToCustomerView }) =>
         <FlatList
           data={filteredOrders}
           keyExtractor={item => item.id}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[
+            styles.listContent,
+            { paddingBottom: 60 + Math.max(insets.bottom, 12) },
+          ]}
           renderItem={({ item }) => {
             const tierInfo = getTierInfo(item.customerTier);
 
@@ -228,7 +247,7 @@ export const OrderFeed: React.FC<OrderFeedProps> = ({ onBackToCustomerView }) =>
           }
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

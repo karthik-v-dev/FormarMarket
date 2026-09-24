@@ -6,9 +6,9 @@ import {
   FlatList,
   Pressable,
   Image,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Order, UserProfile } from '../../types';
 import { subscribeToOrders } from '../../services/firebaseRtdb';
 import { getProductImageUrl } from '../../utils/unsplashImages';
@@ -54,9 +54,11 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({
     }
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
+    <View style={styles.safeArea}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 6 }]}>
         <Pressable style={styles.backBtn} onPress={onBack}>
           <Text style={styles.backIcon}>←</Text>
         </Pressable>
@@ -72,7 +74,10 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({
         <FlatList
           data={orders}
           keyExtractor={item => item.id}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[
+            styles.listContent,
+            { paddingBottom: 40 + Math.max(insets.bottom, 12) },
+          ]}
           renderItem={({ item }) => {
             const statusStyle = getStatusColor(item.status);
             return (
@@ -172,7 +177,7 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({
           }
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

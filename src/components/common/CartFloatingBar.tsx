@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CartItem, CustomerTier } from '../../types';
 import { calculateCartSummary } from '../../utils/tierCalculator';
 
@@ -14,6 +15,7 @@ export const CartFloatingBar: React.FC<CartFloatingBarProps> = ({
   userTier,
   onPress,
 }) => {
+  const insets = useSafeAreaInsets();
   const totalItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   if (totalItemCount === 0) return null;
 
@@ -23,8 +25,11 @@ export const CartFloatingBar: React.FC<CartFloatingBarProps> = ({
   );
   const calculation = calculateCartSummary(rawSubtotal, userTier);
 
+  // Position above the tab bar and the Android soft navigation bar
+  const bottomPosition = Math.max(insets.bottom, 12) + 68;
+
   return (
-    <View style={styles.floatingContainer}>
+    <View style={[styles.floatingContainer, { bottom: bottomPosition }]}>
       <Pressable style={styles.bar} onPress={onPress}>
         <View style={styles.leftSection}>
           <View style={styles.itemCountBadge}>
@@ -57,7 +62,6 @@ export const CartFloatingBar: React.FC<CartFloatingBarProps> = ({
 const styles = StyleSheet.create({
   floatingContainer: {
     position: 'absolute',
-    bottom: 12,
     left: 16,
     right: 16,
     zIndex: 99,

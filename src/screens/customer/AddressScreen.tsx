@@ -8,8 +8,8 @@ import {
   TextInput,
   Modal,
   Alert,
-  SafeAreaView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { UserProfile, Address } from '../../types';
 import { saveUserAddress, setActiveAddress } from '../../services/firebaseRtdb';
 
@@ -78,9 +78,11 @@ export const AddressScreen: React.FC<AddressScreenProps> = ({ user, onBack }) =>
     }
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
+    <View style={styles.safeArea}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 6 }]}>
         <Pressable style={styles.backBtn} onPress={onBack}>
           <Text style={styles.backIcon}>←</Text>
         </Pressable>
@@ -88,7 +90,12 @@ export const AddressScreen: React.FC<AddressScreenProps> = ({ user, onBack }) =>
         <View style={{ width: 32 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: 40 + Math.max(insets.bottom, 12) },
+        ]}
+      >
         {/* Auto Detect Location Card */}
         <Pressable style={styles.autoDetectCard} onPress={handleAutoDetectLocation}>
           <View style={styles.gpsIconCircle}>
@@ -239,7 +246,7 @@ export const AddressScreen: React.FC<AddressScreenProps> = ({ user, onBack }) =>
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

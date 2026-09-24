@@ -7,8 +7,8 @@ import {
   Pressable,
   Linking,
   Alert,
-  SafeAreaView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CartItem, UserProfile } from '../../types';
 import { calculateCartSummary, getTierInfo } from '../../utils/tierCalculator';
 import { checkOrderCutoff, MORNING_DELIVERY_SLOTS } from '../../utils/timeCutoff';
@@ -114,9 +114,11 @@ export const WhatsAppOrder: React.FC<WhatsAppOrderProps> = ({
     }
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
+    <View style={styles.safeArea}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 6 }]}>
         <Pressable style={styles.backBtn} onPress={onBack}>
           <Text style={styles.backIcon}>←</Text>
         </Pressable>
@@ -124,7 +126,12 @@ export const WhatsAppOrder: React.FC<WhatsAppOrderProps> = ({
         <View style={{ width: 32 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: 40 + Math.max(insets.bottom, 12) },
+        ]}
+      >
         {/* Eligibility Verification Card */}
         {isExistingCustomer ? (
           <View style={styles.verifiedCard}>
@@ -215,7 +222,7 @@ export const WhatsAppOrder: React.FC<WhatsAppOrderProps> = ({
           </Pressable>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

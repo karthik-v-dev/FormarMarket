@@ -9,10 +9,10 @@ import {
   TextInput,
   Modal,
   Alert,
-  SafeAreaView,
   ScrollView,
   Switch,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Product, ProductCategory, ProductUnit } from '../../types';
 import {
   subscribeToProducts,
@@ -27,10 +27,12 @@ import {
 
 interface InventoryManagerProps {
   onBackToCustomerView: () => void;
+  onLogout?: () => void;
 }
 
 export const InventoryManager: React.FC<InventoryManagerProps> = ({
   onBackToCustomerView,
+  onLogout,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filterCategory, setFilterCategory] = useState<'all' | ProductCategory>('all');
@@ -136,17 +138,29 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
     p => filterCategory === 'all' || p.category === filterCategory
   );
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      {/* Top Header */}
-      <View style={styles.header}>
-        <View>
+    <View style={styles.safeArea}>
+      {/* Top Header with Insets */}
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 6 }]}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>🌾 Farm Inventory Manager</Text>
           <Text style={styles.headerSub}>Live Realtime Catalog & Zero-Stock Guard</Text>
         </View>
-        <Pressable style={styles.previewBtn} onPress={onBackToCustomerView}>
-          <Text style={styles.previewBtnText}>🛒 Customer View</Text>
-        </Pressable>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pressable style={styles.previewBtn} onPress={onBackToCustomerView}>
+            <Text style={styles.previewBtnText}>Shop View</Text>
+          </Pressable>
+          {onLogout && (
+            <Pressable
+              style={[styles.previewBtn, { backgroundColor: '#FEE2E2', borderColor: '#FCA5A5', marginLeft: 6 }]}
+              onPress={onLogout}
+            >
+              <Text style={[styles.previewBtnText, { color: '#B91C1C' }]}>Logout</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
 
       {/* Action Bar */}
@@ -193,7 +207,10 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
       <FlatList
         data={filteredProducts}
         keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[
+          styles.listContent,
+          { paddingBottom: 60 + Math.max(insets.bottom, 12) },
+        ]}
         renderItem={({ item }) => {
           const isZeroStock = item.stockQuantity <= 0;
           const isEditing = editingProductId === item.id;
@@ -491,7 +508,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

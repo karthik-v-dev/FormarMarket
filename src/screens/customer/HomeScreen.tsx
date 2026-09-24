@@ -6,13 +6,13 @@ import {
   FlatList,
   TextInput,
   Pressable,
-  SafeAreaView,
   StatusBar,
   RefreshControl,
   ActivityIndicator,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Product, ProductCategory, CartItem, UserProfile } from '../../types';
-import { subscribeToProducts, subscribeToUserProfile } from '../../services/firebaseRtdb';
+import { subscribeToProducts } from '../../services/firebaseRtdb';
 import { ZeptoHeader } from '../../components/common/ZeptoHeader';
 import { ProductCard } from '../../components/common/ProductCard';
 import { CartFloatingBar } from '../../components/common/CartFloatingBar';
@@ -23,6 +23,7 @@ interface HomeScreenProps {
   user: UserProfile;
   currentRole: 'customer' | 'owner';
   onToggleRole: () => void;
+  onLogout: () => void;
   onAddToCart: (product: Product) => void;
   onRemoveFromCart: (product: Product) => void;
   onOpenCart: () => void;
@@ -49,12 +50,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   user,
   currentRole,
   onToggleRole,
+  onLogout,
   onAddToCart,
   onRemoveFromCart,
   onOpenCart,
   onOpenAddresses,
   onOpenWhatsApp,
 }) => {
+  const insets = useSafeAreaInsets();
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<'all' | ProductCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -95,15 +98,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   }, [cart]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      {/* Zepto Top Header */}
+      {/* Zepto Top Header with Inset-adjusted padding */}
       <ZeptoHeader
         user={user}
         currentRole={currentRole}
-        onToggleRole={onToggleRole}
+        onLogout={onLogout}
         onAddressPress={onOpenAddresses}
+        onPreviewToggle={onToggleRole}
       />
 
       {/* 10 PM IST Cutoff & Morning Delivery Window Banner */}
@@ -178,7 +182,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           data={filteredProducts}
           keyExtractor={item => item.id}
           numColumns={2}
-          contentContainerStyle={styles.productListContent}
+          contentContainerStyle={[
+            styles.productListContent,
+            { paddingBottom: 120 + Math.max(insets.bottom, 12) },
+          ]}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -213,7 +220,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         userTier={user.tierStatus}
         onPress={onOpenCart}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -316,7 +323,6 @@ const styles = StyleSheet.create({
   productListContent: {
     paddingHorizontal: 11,
     paddingTop: 8,
-    paddingBottom: 90, // space for floating bar
   },
   centerContainer: {
     flex: 1,

@@ -8,8 +8,8 @@ import {
   Pressable,
   Alert,
   ActivityIndicator,
-  SafeAreaView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CartItem, UserProfile, Product } from '../../types';
 import { calculateCartSummary, getTierInfo } from '../../utils/tierCalculator';
 import { checkOrderCutoff, MORNING_DELIVERY_SLOTS } from '../../utils/timeCutoff';
@@ -133,9 +133,11 @@ export const CartScreen: React.FC<CartScreenProps> = ({
     }
   };
 
+  const insets = useSafeAreaInsets();
+
   if (cart.length === 0) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.safeArea, { paddingTop: Math.max(insets.top, 14) }]}>
         <View style={styles.emptyCartContainer}>
           <Text style={styles.emptyCartEmoji}>🛒</Text>
           <Text style={styles.emptyCartTitle}>Your cart is empty</Text>
@@ -146,13 +148,18 @@ export const CartScreen: React.FC<CartScreenProps> = ({
             <Text style={styles.startShoppingText}>Start Shopping</Text>
           </Pressable>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <View style={[styles.safeArea, { paddingTop: Math.max(insets.top, 14) }]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: 70 + Math.max(insets.bottom, 12) },
+        ]}
+      >
         {/* Delivery Address Card */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
@@ -375,7 +382,7 @@ export const CartScreen: React.FC<CartScreenProps> = ({
           )}
         </Pressable>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
